@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Demonstration of ChatGPT API in a Python Flask Application for Ramsey Systems.">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <title>Ramsey Systems Prototype</title>
+  </head>
+
+<body>
+
+
+<!-- page header start -->
+<header>
+  <nav class="navbar fixed-top navbar-light bg-light">
+      <a class="navbar-brand" href="#" style="margin-left: 10px;">
+        <img src="{{ url_for('static', filename='images/RSLogo.png') }}"  height="30px;" class="d-inline-block align-top" alt="" style="margin-right: 10px;">
+        Ramsey Systems: Example Patient Creator
+      </a>
+    </nav>
+</header>
+
+<!-- page content start -->
+<main class="flex-shrink-0">
+  <br>
+  <br>
+  <br>
+  <div class="input-output" style="display: flex; justify-content: space-between; align-items: center; width: 60%;">
+
+      <div class="input-group mb-3" style="width:700px; margin-top: 15px;">
+        <input class="form-control" type="file" id="storyFileLoad">
+        <div class="input-group-append">
+            <button class="btn" id="storyFileLoadButton" style="margin-left: 5px;">Load File</button>
+        </div>
+      </div>
+
+        <button class="btn" onclick="downloadStoryData()">Save JSON</button>
+
+  </div>
+
+  <button class="tablink btn" onclick="openPage('Story', this, 'grey')" id="defaultOpen">Story Editor</button>
+  <button class="tablink btn" onclick="openPage('Timeline', this, 'grey')">Timeline Editor</button>
+
+<div id="Story" class="tabcontent">
+    <br>
+    <br>
+      <div class="container left">
+
+        <div class="container history">
+          <h4 style="margin-top: 10px;">Chat History</h4>
+            <button id="story-history-button" class="btn" style="float:left; margin-left: 5px;">Save Output</button>
+          <br>
+          <br>
+
+          <div class="accordion" id="accordionExample">
+            <div id="storyHistoryContent">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="container right">
+        <br>
+
+        <table id="storyJsonTable" class="table table-bordered table-striped"></table>     
+
+      </div>
+</div>
+
+<div id="Timeline" class="tabcontent">
+  <br>
+  <br>
+  <h4>Manual Timeline Page</h4>
+  <br>
+ 
+  <textarea class="form-control" id="jsonOutput" style="height: 150px; background-color: rgba(241, 241, 241, 0.624);"></textarea>
+  <br>
+      
+  <button id="addBlankRowBtn" class="btn">Add Blank Row</button>
+  <br>
+  <br>
+
+  <div class="container">
+      <table class="table wrap-text-table table-striped table-bordered">
+          <thead>
+              <tr>
+                  <th scope="col" style="width: 150px;">Date/Time</th>
+                  <th scope="col" style="width: 150px;">Event</th>
+                  <th scope="col" style="width: 150px;">Data Items</th>
+                  <th scope="col" style="width: 150px;">Actions</th>
+              </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+      </table>
+  </div>
+
+  <div id="editModal" class="modal">
+      <div class="modal-content">
+        <button onclick="addLinkedDataRow()" class="btn btn-outline-dark" style="width: 120px;">Add Row</button>
+        <button id="closeLinkedData" class="btn btn-outline-dark" style="width: 80px;">Close</button>
+        <br>
+          <table class="table wrap-text-table table-striped table-bordered">
+              <thead>
+                  <tr>
+                      <th>Data Path</th>
+                      <th>Example Data</th>
+                      <th>Standard</th>
+                      <th>Actions</th>
+                  </tr>
+              </thead>
+              <tbody id="linkedDataTableBody">
+              </tbody>
+          </table>
+          
+          <button id="deleteDataItem" class="btn btn-outline-dark" onclick="resetLinkedData()" style="width: 80px;">Delete</button>
+          
+      </div>
+  </div>
+
+
+
+</div>
+
+</main>
+
+<!-- scripts start -->
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+  </body>
+</html>
