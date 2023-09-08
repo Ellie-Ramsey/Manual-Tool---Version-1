@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Demonstration of ChatGPT API in a Python Flask Application for Ramsey Systems.">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     
     <title>Ramsey Systems Prototype</title>
@@ -45,7 +45,7 @@
 
   </div>
 
-  <button class="tablink btn" onclick="openPage('Story', this, 'grey')" id="defaultOpen">Story Editor</button>
+  <button class="tablink btn" onclick="openPage('Story', this, 'grey')" id="defaultOpen" style="margin-left: 15px;">Story Editor</button>
   <button class="tablink btn" onclick="openPage('Timeline', this, 'grey')">Timeline Editor</button>
 
 <div id="Story" class="tabcontent">
@@ -53,9 +53,12 @@
     <br>
       <div class="container left">
 
+        <button id="addStoryRow" class="btn btn-primary mb-3">Add Row</button>
+
+        <br>
         <div class="container history">
           <h4 style="margin-top: 10px;">Chat History</h4>
-            <button id="story-history-button" class="btn" style="float:left; margin-left: 5px;">Save Output</button>
+            <button id="story-history-button" class="btn" style="float:left;">Save Output</button>
           <br>
           <br>
 
@@ -69,9 +72,28 @@
       </div>
 
       <div class="container right">
-        <br>
 
-        <table id="storyJsonTable" class="table table-bordered table-striped"></table>     
+        <textarea class="form-control" id="storyTextArea" style="height: 200px; background-color: rgba(241, 241, 241, 0.624);"></textarea>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th style="width:30%;">Summary</th>
+              <th style="width:30%;">Rationale</th>
+              <th style="width:30%;">Story</th>
+              <th style="width:10%;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Rows will be added here -->
+          </tbody>
+        </table>
+      </div>
+
+
+
+
+
 
       </div>
 </div>

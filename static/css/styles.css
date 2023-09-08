@@ -1,7 +1,7 @@
 /* MAIN CONTENT */
 .left {
     float: left;
-    width: 30%;
+    width: 29%;
     height: 100%;
     margin-top: 10px;
 }
@@ -18,8 +18,8 @@
 }
 
 .history {
-  min-height: 595px;
-  border-right:rgb(0, 0, 0) solid 1px;
+    min-height: auto;
+    border-top:rgb(5, 0, 39) solid 2px;
 }
 
 .input-output {
