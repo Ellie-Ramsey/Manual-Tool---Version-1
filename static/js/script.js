@@ -1,5 +1,5 @@
 //VARIABLE PREDEFINED
-  let story_data = [{"Summary":"","Rationale":"","Story":""}];
+  let story_data = [];
   let storySave = 1;
 
   let timeline_data = [];
@@ -32,13 +32,36 @@ function openPage(pageName,elmnt,color) {
 
 // 
 
-document.getElementById("addStoryRow").addEventListener("click", function() {
-  // Generate a new row
+function updateStoryJSON() {
+
+  const rows = document.querySelectorAll("#tableBody tr");
+  rows.forEach(row => {
+      const id = parseInt(row.id.replace("row-", ""), 10);
+      const summaryCell = row.querySelector("[data-key='summary']");
+      const rationaleCell = row.querySelector("[data-key='rationale']");
+      const storyCell = row.querySelector("[data-key='story']");
+
+      // Find the story_data entry by id or create a new one if it doesn't exist
+      let dataObj = story_data.find(x => x.id === id);
+      if (!dataObj) {
+          dataObj = { id: id };
+          story_data.push(dataObj);
+      }
+
+      dataObj.Summary = summaryCell.textContent;
+      dataObj.Rationale = rationaleCell.textContent;
+      dataObj.Story = storyCell.textContent;
+  });
+  console.log(story_data);
+  updateJSONDisplay();
+}
+
+document.getElementById("addStoryRow").addEventListener("click", function () {
   const newRow = `
       <tr id="row-${nextId}">
-          <td data-key="summary" contenteditable="true"></td>
-          <td data-key="rationale" contenteditable="true"></td>
-          <td data-key="story" contenteditable="true"></td>
+          <td data-key="summary" contenteditable="true" oninput="updateStoryJSON()"></td>
+          <td data-key="rationale" contenteditable="true" oninput="updateStoryJSON()"></td>
+          <td data-key="story" contenteditable="true" oninput="updateStoryJSON()"></td>
           <td>
               <button class="btn btn-danger" onclick="deleteRow(${nextId})">Delete</button>
           </td>
@@ -46,20 +69,24 @@ document.getElementById("addStoryRow").addEventListener("click", function() {
   `;
 
   document.getElementById("tableBody").innerHTML += newRow;
-
-
   nextId++;
+  updateStoryJSON();
+  updateJSONDisplay();
 });
-
 
 function deleteRow(id) {
   const row = document.getElementById("row-" + id);
   row.parentNode.removeChild(row);
-  
+
+  // Remove the object with the corresponding id from the story_data array
+  const index = story_data.findIndex(x => x.id === id);
+  if (index !== -1) {
+      story_data.splice(index, 1);
+  }
+
+  updateStoryJSON();
+  updateJSONDisplay();
 }
-
-
-
 
 function updateJSONDisplay() {
   // If you have an element to show the JSON, use this. Otherwise, you can remove this function.
