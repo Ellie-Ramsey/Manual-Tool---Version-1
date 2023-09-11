@@ -209,25 +209,33 @@ document.addEventListener("DOMContentLoaded", function() {
       updateJSONDisplay();
   }
 
+  // current focus
   function populateLinkedDataModal(rowId) {
-      const obj = timeline_data.find(o => o.id === rowId);
-      let tableContent = "";
-      if (obj && obj.linkedData) {
-          obj.linkedData.forEach(data => {
-              tableContent += `
-                  <tr>
-                      <td contenteditable="true">${data.dataPath}</td>
-                      <td contenteditable="true">${data.exampleData}</td>
-                      <td contenteditable="true">${data.standard}</td>
-                      <td>
-                          <button class="btn btn-danger" onclick="deleteLinkedDataRow(this)">Delete</button>
-                      </td>
-                  </tr>
-              `;
-          });
-      }
-      document.getElementById("linkedDataTableBody").innerHTML = tableContent;
+    const obj = timeline_data.find(o => o.id === rowId);
+    let tableContent = "";
+    if (obj && obj.linkedData) {
+      obj.linkedData.forEach(data => {
+        tableContent += `
+          <tr>
+            <td contenteditable="true">${data.dataPath}</td>
+            <td contenteditable="true">${data.exampleData}</td>
+            <td>
+              <select class="standard-dropdown">
+                <option value="standard1">Standard 1</option>
+                <option value="standard2">Standard 2</option>
+                <!-- Add other standards here -->
+              </select>
+            </td>
+            <td>
+              <button class="btn btn-danger" onclick="deleteLinkedDataRow(this)">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+    document.getElementById("linkedDataTableBody").innerHTML = tableContent;
   }
+  
 
   window.resetLinkedData = function() {
     const obj = timeline_data.find(o => o.id === currentRowId);
@@ -249,18 +257,20 @@ closeLinkedData.onclick = function() {
 }
 
   function saveLinkedDataToJSON() {
-      const obj = timeline_data.find(o => o.id === currentRowId);
-      const rows = document.getElementById("linkedDataTableBody").querySelectorAll("tr");
-      obj.linkedData = [];
-      rows.forEach(row => {
-          const cells = row.querySelectorAll("td");
-          obj.linkedData.push({
-              dataPath: cells[0].textContent,
-              exampleData: cells[1].textContent,
-              standard: cells[2].textContent
-          });
-      });
-  }
+  const obj = timeline_data.find(o => o.id === currentRowId);
+  const rows = document.getElementById("linkedDataTableBody").querySelectorAll("tr");
+  obj.linkedData = [];
+  rows.forEach(row => {
+    const cells = row.querySelectorAll("td");
+    const standardDropdown = row.querySelector(".standard-dropdown");
+    obj.linkedData.push({
+      dataPath: cells[0].textContent,
+      exampleData: cells[1].textContent,
+      standard: standardDropdown ? standardDropdown.value : ''
+    });
+  });
+}
+
 
   document.getElementById("linkedDataTableBody").addEventListener("blur", function(event) {
       saveLinkedDataToJSON();
@@ -268,18 +278,25 @@ closeLinkedData.onclick = function() {
   }, true);
 
   window.addLinkedDataRow = function() {
-      const newRow = `
-          <tr>
-              <td contenteditable="true"></td>
-              <td contenteditable="true"></td>
-              <td contenteditable="true"></td>
-              <td>
-                  <button class="btn btn-danger" onclick="deleteLinkedDataRow(this)">Delete</button>
-              </td>
-          </tr>
-      `;
-      document.getElementById("linkedDataTableBody").innerHTML += newRow;
+    const newRow = `
+      <tr>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td>
+          <select class="standard-dropdown">
+            <option value="standard1">Standard 1</option>
+            <option value="standard2">Standard 2</option>
+            <!-- Add other standards here -->
+          </select>
+        </td>
+        <td>
+          <button class="btn btn-danger" onclick="deleteLinkedDataRow(this)">Delete</button>
+        </td>
+      </tr>
+    `;
+    document.getElementById("linkedDataTableBody").innerHTML += newRow;
   }
+  
 
   linkedDataModal.addEventListener("click", function(event) {
     if (event.target === linkedDataModal) {  // This ensures we're clicking on the modal background and not on its content
@@ -292,5 +309,13 @@ closeLinkedData.onclick = function() {
       saveLinkedDataToJSON();
       updateJSONDisplay();
   }
+
+  document.getElementById("linkedDataTableBody").addEventListener("change", function(event) {
+    if (event.target && event.target.matches(".standard-dropdown")) {
+      saveLinkedDataToJSON();
+      updateJSONDisplay();
+    }
+  }, true);
+  
 
 });
