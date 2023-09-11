@@ -5,6 +5,9 @@
 
   let timeline_data = [];
   let timelineSave = 1;
+
+  let timelineNextId = 1;
+  let currentRowId = null;
   
 
 
@@ -29,6 +32,7 @@ function openPage(pageName,elmnt,color) {
 
 
 ///////////////////////////STORY//////////////////////////
+//story text area update
 function updateJSONDisplay() {
   // If you have an element to show the JSON, use this. Otherwise, you can remove this function.
   const jsonOutputElem = document.getElementById("storyTextArea");
@@ -37,6 +41,7 @@ function updateJSONDisplay() {
   }
 }
 
+//story table add
 document.getElementById("addStoryRow").addEventListener("click", function () {
   const newRow = document.createElement('tr');
   newRow.id = `row-${storyNextId}`;
@@ -54,14 +59,15 @@ document.getElementById("addStoryRow").addEventListener("click", function () {
   deleteButton.dataset.id = storyNextId;
   actionCell.appendChild(deleteButton);
 
-  document.getElementById("tableBody").appendChild(newRow);
+  document.getElementById("storyTableBody").appendChild(newRow);
 
   story_data.push({id: storyNextId, Summary: '', Rationale: '', Story: ''});
   storyNextId++;
   updateJSONDisplay();
 });
 
-document.getElementById("tableBody").addEventListener('input', function (e) {
+//story table edit
+document.getElementById("storyTableBody").addEventListener('input', function (e) {
   if (e.target && e.target.matches("[data-key]")) {
     const key = e.target.getAttribute('data-key');
     const id = parseInt(e.target.parentElement.id.replace("row-", ""), 10);
@@ -73,7 +79,8 @@ document.getElementById("tableBody").addEventListener('input', function (e) {
   }
 });
 
-document.getElementById("tableBody").addEventListener('click', function (e) {
+//story table delete
+document.getElementById("storyTableBody").addEventListener('click', function (e) {
   if (e.target && e.target.matches(".btn-danger")) {
     const id = parseInt(e.target.dataset.id, 10);
     e.target.parentElement.parentElement.remove();
@@ -86,7 +93,7 @@ document.getElementById("tableBody").addEventListener('click', function (e) {
   }
 });
 
-
+//story history save
 $('#story-history-button').click(function() {
   let headingVar = "storyHeading" + storySave;
   let collapseVar = "storyCollapse" + storySave;
@@ -122,3 +129,168 @@ $('#story-history-button').click(function() {
  
  );
 
+
+
+///////////////////////////TIMELINE//////////////////////////
+document.addEventListener("DOMContentLoaded", function() {
+
+  const linkedDataModal = document.getElementById("editModal");
+  const closeLinkedData = document.getElementById("closeLinkedData");
+
+  function updateJSONDisplay() {
+      // If you have an element to show the JSON, use this. Otherwise, you can remove this function.
+      const jsonOutputElem = document.getElementById("jsonOutput");
+      if (jsonOutputElem) {
+          jsonOutputElem.value = JSON.stringify(timeline_data, null, 2);
+      }
+  }
+
+  document.getElementById("addBlankRowBtn").addEventListener("click", function() {
+      timeline_data.push({
+          id: timelineNextId,
+          time: "",
+          event: "",
+          dataItems: null,
+          linkedData: []
+      });
+
+      const newRow = `
+          <tr id="row-${timelineNextId}">
+              <td data-key="time" contenteditable="true"></td>
+              <td data-key="event" contenteditable="true"></td>
+              <td>
+                  <button id="dataItemBtn-${timelineNextId}" onclick="toggleDataItem(${timelineNextId})">Add</button>
+              </td>
+              <td>
+                  <button class="btn btn-danger" onclick="deleteRow(${timelineNextId})">Delete</button>
+              </td>
+          </tr>
+      `;
+
+      document.getElementById("timelineTableBody").innerHTML += newRow;
+      timelineNextId++;
+      updateJSONDisplay();
+  });
+
+  document.getElementById("timelineTableBody").addEventListener("blur", function(event) {
+      const target = event.target;
+      if (target.hasAttribute("data-key")) {
+          const rowId = parseInt(target.parentElement.getAttribute("id").split("-")[1]);
+          const obj = timeline_data.find(obj => obj.id === rowId);
+
+          if (target.getAttribute("data-key") === "time") {
+              obj["time"] = target.textContent;
+          } else if (target.getAttribute("data-key") === "event") {
+              obj["event"] = target.textContent;
+          }
+          updateJSONDisplay();
+      }
+  }, true);
+
+  window.toggleDataItem = function(rowId) {
+      const btn = document.getElementById("dataItemBtn-" + rowId);
+      if (btn.innerText === "Add" || btn.innerText === "Edit") {
+          btn.innerText = "Edit";
+          currentRowId = rowId;
+          linkedDataModal.style.display = "block"; 
+          populateLinkedDataModal(rowId);
+      } else {
+          btn.innerText = "Add";
+          currentRowId = null;
+      }
+  }
+
+  window.deleteRow = function(rowId) {
+      timeline_data = timeline_data.filter(obj => obj.id !== rowId);
+      const rowElement = document.getElementById("row-" + rowId);
+      if (rowElement) {
+          rowElement.remove();
+      }
+      updateJSONDisplay();
+  }
+
+  function populateLinkedDataModal(rowId) {
+      const obj = timeline_data.find(o => o.id === rowId);
+      let tableContent = "";
+      if (obj && obj.linkedData) {
+          obj.linkedData.forEach(data => {
+              tableContent += `
+                  <tr>
+                      <td contenteditable="true">${data.dataPath}</td>
+                      <td contenteditable="true">${data.exampleData}</td>
+                      <td contenteditable="true">${data.standard}</td>
+                      <td>
+                          <button class="btn btn-danger" onclick="deleteLinkedDataRow(this)">Delete</button>
+                      </td>
+                  </tr>
+              `;
+          });
+      }
+      document.getElementById("linkedDataTableBody").innerHTML = tableContent;
+  }
+
+  window.resetLinkedData = function() {
+    const obj = timeline_data.find(o => o.id === currentRowId);
+    if (obj) {
+        obj.linkedData = [];  // Reset the linked data for the row
+    }
+    const btn = document.getElementById("dataItemBtn-" + currentRowId);
+    if (btn) {
+        btn.innerText = "Add";  // Change the button back to 'Add'
+    }
+    linkedDataModal.style.display = "none";  // Close the modal
+    updateJSONDisplay();
+}
+
+closeLinkedData.onclick = function() {
+  linkedDataModal.style.display = "none";
+  saveLinkedDataToJSON();
+  updateJSONDisplay();
+}
+
+  function saveLinkedDataToJSON() {
+      const obj = timeline_data.find(o => o.id === currentRowId);
+      const rows = document.getElementById("linkedDataTableBody").querySelectorAll("tr");
+      obj.linkedData = [];
+      rows.forEach(row => {
+          const cells = row.querySelectorAll("td");
+          obj.linkedData.push({
+              dataPath: cells[0].textContent,
+              exampleData: cells[1].textContent,
+              standard: cells[2].textContent
+          });
+      });
+  }
+
+  document.getElementById("linkedDataTableBody").addEventListener("blur", function(event) {
+      saveLinkedDataToJSON();
+      updateJSONDisplay();
+  }, true);
+
+  window.addLinkedDataRow = function() {
+      const newRow = `
+          <tr>
+              <td contenteditable="true"></td>
+              <td contenteditable="true"></td>
+              <td contenteditable="true"></td>
+              <td>
+                  <button class="btn btn-danger" onclick="deleteLinkedDataRow(this)">Delete</button>
+              </td>
+          </tr>
+      `;
+      document.getElementById("linkedDataTableBody").innerHTML += newRow;
+  }
+
+  linkedDataModal.addEventListener("click", function(event) {
+    if (event.target === linkedDataModal) {  // This ensures we're clicking on the modal background and not on its content
+        linkedDataModal.style.display = "none";
+    }
+  });
+
+  window.deleteLinkedDataRow = function(buttonElem) {
+      buttonElem.parentElement.parentElement.remove();
+      saveLinkedDataToJSON();
+      updateJSONDisplay();
+  }
+
+});
