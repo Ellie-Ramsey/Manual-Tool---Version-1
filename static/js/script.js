@@ -90,35 +90,35 @@ document.getElementById("tableBody").addEventListener('click', function (e) {
 $('#story-history-button').click(function() {
   let headingVar = "storyHeading" + storySave;
   let collapseVar = "storyCollapse" + storySave;
-
-  let story_data_json = story_data;
   
-  let html_data = '';
-    for (let i = 0; i < story_data_json.length; i++) {
-      let formattedStoryData = '';
-      for (let key in story_data_json[i]) {
-        formattedStoryData += `<strong>${key}:</strong> ${story_data_json[i][key]}<br/>`;
-      }
-
-      html_data += `
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="${headingVar + i}">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseVar + i}" aria-expanded="false" aria-controls="${collapseVar + i}">
-              Accordion Item #${storySave + i}
-            </button>
-          </h2>
-          <div id="${collapseVar + i}" class="accordion-collapse collapse" aria-labelledby="${headingVar + i}" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
-              ${formattedStoryData}
-            </div>
-          </div>
-        </div>
-      `;
+  let formattedStoryData = '';
+  
+  for (let i = 0; i < story_data.length; i++) {
+    for (let key in story_data[i]) {
+      formattedStoryData += `<strong>${key}:</strong> ${story_data[i][key]}<br/>`;
     }
-
-  $('#storyHistoryContent').append(html_data);
-
-  storySave = storySave + 1;
-
- });
+    formattedStoryData += '<hr>';
+  }
+  
+  let html_data = `
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="${headingVar}">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseVar}" aria-expanded="false" aria-controls="${collapseVar}">
+          Accordion Item #${storySave}
+        </button>
+      </h2>
+      <div id="${collapseVar}" class="accordion-collapse collapse" aria-labelledby="${headingVar}" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          ${formattedStoryData}
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById("accordionExample").innerHTML += html_data;
+  storySave++;
+  
+ }
+ 
+ );
 
