@@ -1,5 +1,14 @@
 This is a manual only version of the Ramsey Systems AI research project.
 
+Standards Text Layout:
+- There is an exmaple file called 'Standards_Exmaples.txt' in the root directory of the project.
+However the layout should be as follows:
+
+Standard 1
+Standard 2
+Standard 3
+
+- Each standard should be on a new line without any commas or quotes
 
 Features To Add:
 - Story Table Fix DONE
