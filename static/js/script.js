@@ -310,22 +310,24 @@ document.addEventListener("DOMContentLoaded", function() {
     updateJSONDisplay();
   }
 
-function populateLinkedDataModal(rowId) {
-  const obj = timeline_data[rowId];
-  let tableContent = "";
-  if (obj && obj.linkedData) {
-    tableContent = `
-      <tr>
-        <td contenteditable="true">${obj.linkedData.dataPath || ''}</td>
-        <td contenteditable="true">${obj.linkedData.exampleData || ''}</td>
-        <td>
-          <button class="btn btn-danger" onclick="deleteLinkedDataRow(this)">Delete</button>
-        </td>
-      </tr>
-    `;
+  function populateLinkedDataModal(rowId) {
+    const obj = timeline_data[rowId];
+    let tableContent = "";
+    if (obj && obj.linkedData) {
+      obj.linkedData.forEach((dataItem, index) => {
+        tableContent += `
+          <tr>
+            <td contenteditable="true">${dataItem.dataPath || ''}</td>
+            <td contenteditable="true">${dataItem.exampleData || ''}</td>
+            <td>
+              <button class="btn btn-danger" onclick="deleteLinkedDataRow(this, ${index})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+    document.getElementById("linkedDataTableBody").innerHTML = tableContent;
   }
-  document.getElementById("linkedDataTableBody").innerHTML = tableContent;
-}
 
 window.resetLinkedData = function() {
   const obj = timeline_data[currentRowId];
@@ -352,15 +354,18 @@ function saveLinkedDataToJSON() {
   const obj = timeline_data[currentRowId];
   const dropdown = document.getElementById('standardsDropdown');
   const selectedStandard = dropdown ? dropdown.value : null;
-  obj.linkedData = {};
-  const rows = document.querySelectorAll("#linkedDataTableBody tr");
 
+  obj.linkedData = [];  // Resetting linkedData to an empty array
+  const rows = document.querySelectorAll("#linkedDataTableBody tr");
   rows.forEach(row => {
     const cells = row.querySelectorAll("td");
-    obj.linkedData["dataPath"] = cells[0].textContent;
-    obj.linkedData["exampleData"] = cells[1].textContent;
-    obj.standard = selectedStandard;
+    obj.linkedData.push({
+      dataPath: cells[0].textContent,
+      exampleData: cells[1].textContent
+    });
   });
+  
+  obj.standard = selectedStandard;  // Setting the standard
 }
 
 document.getElementById("linkedDataTableBody").addEventListener("blur", function(event) {
@@ -370,14 +375,14 @@ document.getElementById("linkedDataTableBody").addEventListener("blur", function
 
 window.addLinkedDataRow = function() {
   const newRow = `
-  <tr id="row-${timelineNextId}">
-      <td data-key="time" contenteditable="true"></td>
-      <td data-key="event" contenteditable="true"></td>
+    <tr>
+      <td contenteditable="true"></td>
+      <td contenteditable="true"></td>
       <td>
-          <button class="btn btn-danger delete-row">Delete</button>
+        <button class="btn btn-danger" onclick="deleteLinkedDataRow(this)">Delete</button>
       </td>
-  </tr>
-`;
+    </tr>
+  `;
 
   document.getElementById("linkedDataTableBody").innerHTML += newRow;
 }
@@ -388,8 +393,9 @@ linkedDataModal.addEventListener("click", function(event) {
   }
 });
 
-window.deleteLinkedDataRow = function(buttonElem) {
+window.deleteLinkedDataRow = function(buttonElem, index) {
   buttonElem.parentElement.parentElement.remove();
+  timeline_data[currentRowId].linkedData.splice(index, 1);  // Remove the corresponding object from linkedData
   saveLinkedDataToJSON();
   updateJSONDisplay();
 }
