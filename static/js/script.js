@@ -1,12 +1,10 @@
 //VARIABLE PREDEFINED
 let story_data = { "Summary": "", "Rationale": "", "Story": ""};
 let storySave = 1;
-let timeline_data = [];
-let timelineNextId = 1;
+let timeline_data = {};
 let timelineSave = 1;
 let currentRowId = null;
-let persistedData = JSON.parse(JSON.stringify(timeline_data)); // Deep copy
-
+let timelineNextId = 1;
 
   
 
@@ -227,7 +225,6 @@ document.addEventListener("DOMContentLoaded", function() {
       jsonOutputElem.value = JSON.stringify(timeline_data, null, 2);
     }
   }
-  
 
   document.getElementById("addBlankRowBtn").addEventListener("click", function() {
     timeline_data[timelineNextId] = {
@@ -255,10 +252,10 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("timelineTableBody").innerHTML += newRow;
     timelineNextId++;
     updateJSONDisplay();
-    console.log("Add Blank Row Button main Clicked")
   });
 
   
+
   document.getElementById("standardsDropdown").addEventListener('change', function() {
     saveLinkedDataToJSON();
     updateJSONDisplay();
@@ -288,10 +285,8 @@ document.addEventListener("DOMContentLoaded", function() {
     } else {
       btn.innerText = "Add";
       currentRowId = null;
-      timeline_data = JSON.parse(JSON.stringify(persistedData)); // Restore the original state
     }
   }
-  
 
   document.getElementById("timelineTableBody").addEventListener("input", function(event) {
     const cell = event.target.closest("td");
@@ -348,54 +343,44 @@ window.resetLinkedData = function() {
 }
 
 closeLinkedData.onclick = function() {
-  console.log("Linked Data Being Saved - Close")
   linkedDataModal.style.display = "none";
   saveLinkedDataToJSON();
   updateJSONDisplay();
 }
 
 function saveLinkedDataToJSON() {
-  const obj = timeline_data.find(o => o.id === currentRowId); // Use currentRowId
-  const rows = document.getElementById("linkedDataTableBody").querySelectorAll("tr");
-  if (obj) {
-    obj.linkedData = []; // Initialize to empty array to hold new rows.
-    rows.forEach(row => {
-      const cells = row.querySelectorAll("td");
-      obj.linkedData.push({
-        time: cells[0].textContent,
-        event: cells[1].textContent
-      });
-    });
-  }
+  const obj = timeline_data[currentRowId];
+  const dropdown = document.getElementById('standardsDropdown');
+  const selectedStandard = dropdown ? dropdown.value : null;
+  obj.linkedData = {};
+  const rows = document.querySelectorAll("#linkedDataTableBody tr");
 
-  console.log("Linked Data Being Saved");
+  rows.forEach(row => {
+    const cells = row.querySelectorAll("td");
+    obj.linkedData["dataPath"] = cells[0].textContent;
+    obj.linkedData["exampleData"] = cells[1].textContent;
+    obj.standard = selectedStandard;
+  });
 }
-
 
 document.getElementById("linkedDataTableBody").addEventListener("blur", function(event) {
   saveLinkedDataToJSON();
   updateJSONDisplay();
 }, true);
 
-
 window.addLinkedDataRow = function() {
-  const newLinkedRow = `
-      <tr>
-        <td contenteditable="true"></td>
-        <td contenteditable="true"></td>
-        <td>
-          <button class="btn btn-danger" onclick="deleteLinkedDataRow(this)">Delete</button>
-        </td>
-      </tr>
-    `;
-  document.getElementById("linkedDataTableBody").innerHTML += newLinkedRow;
-  console.log("Add Linked Data Row Button Clicked");
+  const newRow = `
+  <tr id="row-${timelineNextId}">
+      <td data-key="time" contenteditable="true"></td>
+      <td data-key="event" contenteditable="true"></td>
+      <td>
+          <button class="btn btn-danger delete-row">Delete</button>
+      </td>
+  </tr>
+`;
 
-  // No need to add a new timeline_data entry here, just update the JSON display
-  updateJSONDisplay(); 
+  document.getElementById("linkedDataTableBody").innerHTML += newRow;
 }
-
-
 
 linkedDataModal.addEventListener("click", function(event) {
   if (event.target === linkedDataModal) {
