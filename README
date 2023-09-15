@@ -5,13 +5,17 @@ Features To Add:
 - Story Table Fix DONE
 - Story history fix DONE
 
-- Timeline drop down move
-- Timeline history add
-
+- timeline dataItems not changing DONE
+- timeline JSON object not array fix DONE
+- Timeline drop down move DONE
+- Timeline history add DONE
+    
+- fixed weird row not deleting bug which occured
 - Timeline standard text file load
 - JSON Export (not formatted)
 
 
 Future Features:
-- Fix JSON formatting
+- Fix JSON formatting for saving
+- Fix the history save timeline for easier readability
 - Add JSON import
