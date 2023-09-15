@@ -80,7 +80,81 @@ $('#story-history-button').click(function() {
 });
 
 
-// THIS WILL BE THE TIMELINE HISTORY SAVE
+
+
+
+
+
+
+
+
+
+
+///////////////////////////TIMELINE//////////////////////////
+
+
+
+
+function populateStandardsDropdown(standards) {
+  console.log("Populating Standards: ", standards); // Debugging line
+  const dropdown = document.getElementById('standardsDropdown');
+  dropdown.innerHTML = ""; // Clear existing options
+  standards.forEach((standard, index) => {
+    const option = document.createElement('option');
+    option.value = standard;
+    option.textContent = standard;
+    dropdown.appendChild(option);
+  });
+}
+
+
+
+
+// Existing functions to export individual JSON data
+function exportStoryJSON() {
+  const storyJSON = JSON.stringify(story_data, null, 2);
+  const blob = new Blob([storyJSON], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'story.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function exportTimelineJSON() {
+  const timelineJSON = JSON.stringify(timeline_data, null, 2);
+  const blob = new Blob([timelineJSON], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'timeline.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// New function to export both JSON files
+function exportAllJSON() {
+  exportStoryJSON();
+  exportTimelineJSON();
+}
+
+// Attach event listener to the "Save All JSON" button
+document.getElementById('saveAllJSONButton').addEventListener('click', exportAllJSON);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//timeline history save
 $('#timeline-history-button').click(function() {
   let headingVar = "timelineHeading" + timelineSave;
   let collapseVar = "timelineCollapse" + timelineSave;
@@ -106,10 +180,6 @@ $('#timeline-history-button').click(function() {
   timelineSave++;
 });
 
-
-
-
-
 function formatTimelineDataForDisplay(data, indent = 0) {
   let formattedData = '';
   for (let key in data) {
@@ -127,18 +197,27 @@ function formatTimelineDataForDisplay(data, indent = 0) {
 
 
 
-
-
-
-
-
-
-
-///////////////////////////TIMELINE//////////////////////////
+//timeline other
 document.addEventListener("DOMContentLoaded", function() {
 
   const linkedDataModal = document.getElementById("editModal");
   const closeLinkedData = document.getElementById("closeLinkedData");
+
+  document.getElementById('standardsFileLoadButton').addEventListener('change', function(e) {
+    console.log("File change event triggered"); // Debugging line
+    const file = e.target.files[0];
+    if (!file) return;
+  
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const contents = e.target.result;
+      console.log("File Contents:", contents); // Debugging line
+      const lines = contents.split('\n').filter(Boolean);
+      populateStandardsDropdown(lines);
+    };
+    reader.readAsText(file);
+  
+  });
 
   function updateJSONDisplay() {
     const jsonOutputElem = document.getElementById("jsonOutput");
@@ -152,6 +231,7 @@ document.addEventListener("DOMContentLoaded", function() {
       id: timelineNextId,
       time: "",
       event: "",
+      standard: null,
       dataItems: null,
       linkedData: []
     };
@@ -173,6 +253,14 @@ document.addEventListener("DOMContentLoaded", function() {
     timelineNextId++;
     updateJSONDisplay();
   });
+
+  
+
+  document.getElementById("standardsDropdown").addEventListener('change', function() {
+    saveLinkedDataToJSON();
+    updateJSONDisplay();
+  });
+  
 
   document.getElementById("timelineTableBody").addEventListener("click", function(event) {
     if (event.target && event.target.matches(".delete-row")) {
@@ -262,12 +350,16 @@ closeLinkedData.onclick = function() {
 
 function saveLinkedDataToJSON() {
   const obj = timeline_data[currentRowId];
-  const rows = document.getElementById("linkedDataTableBody").querySelectorAll("tr");
+  const dropdown = document.getElementById('standardsDropdown');
+  const selectedStandard = dropdown ? dropdown.value : null;
   obj.linkedData = {};
+  const rows = document.querySelectorAll("#linkedDataTableBody tr");
+
   rows.forEach(row => {
     const cells = row.querySelectorAll("td");
     obj.linkedData["dataPath"] = cells[0].textContent;
     obj.linkedData["exampleData"] = cells[1].textContent;
+    obj.standard = selectedStandard;
   });
 }
 
@@ -281,9 +373,6 @@ window.addLinkedDataRow = function() {
   <tr id="row-${timelineNextId}">
       <td data-key="time" contenteditable="true"></td>
       <td data-key="event" contenteditable="true"></td>
-      <td>
-          <button id="dataItemBtn-${timelineNextId}" onclick="toggleDataItem(${timelineNextId})">Add</button>
-      </td>
       <td>
           <button class="btn btn-danger delete-row">Delete</button>
       </td>

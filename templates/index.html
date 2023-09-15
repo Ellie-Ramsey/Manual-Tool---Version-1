@@ -34,14 +34,17 @@
   <br>
   <div class="input-output" style="display: flex; justify-content: space-between; align-items: center; width: 60%;">
 
-      <div class="input-group mb-3" style="width:700px; margin-top: 15px;">
+      <!-- <div class="input-group mb-3" style="width:700px; margin-top: 15px;">
         <input class="form-control" type="file" id="storyFileLoad">
         <div class="input-group-append">
             <button class="btn" id="standardsFileLoadButton" style="margin-left: 5px;">Load File</button>
         </div>
-      </div>
+      </div> -->
 
-        <button class="btn" onclick="downloadStoryData()">Save JSON</button>
+      <input type="file" id="standardsFileLoadButton" />
+
+      <button class="btn" id="saveAllJSONButton">Save JSONs</button>
+
 
   </div>
 
@@ -140,10 +143,7 @@
         <button id="closeLinkedData" class="btn btn-outline-dark" style="width: 80px;">Close</button>
         </div>
 
-        <select id="standardDropdown">
-          <option value="Standard 1">Standard 1</option>
-          <option value="Standard 2">Standard 2</option>
-        </select>
+        <select id="standardsDropdown" class="standard-dropdown"></select>
 
         <br>
           <table class="table wrap-text-table table-striped table-bordered">
