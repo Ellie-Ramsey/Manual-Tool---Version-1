@@ -37,7 +37,7 @@
       <div class="input-group mb-3" style="width:700px; margin-top: 15px;">
         <input class="form-control" type="file" id="storyFileLoad">
         <div class="input-group-append">
-            <button class="btn" id="storyFileLoadButton" style="margin-left: 5px;">Load File</button>
+            <button class="btn" id="standardsFileLoadButton" style="margin-left: 5px;">Load File</button>
         </div>
       </div>
 
@@ -57,7 +57,7 @@
         <button id="story-history-button" class="btn" style="float:left;">Save Output</button>
         <br>
         <br>
-        <div class="accordion" id="accordionExample">
+        <div class="accordion" id="accordionStory">
         </div>
       </div>
     </div>
@@ -95,8 +95,19 @@
 <div id="Timeline" class="tabcontent">
   <br>
   <br>
-  <h4>Manual Timeline Page</h4>
-  <br>
+
+  <div class="container left">
+    <div class="container history">
+      <h4 style="margin-top: 10px;">Chat History</h4>
+      <button id="timeline-history-button" class="btn" style="float:left;">Save Output</button>
+      <br>
+      <br>
+      <div class="accordion" id="accordionTimeline">
+      </div>
+    </div>
+  </div>
+
+  <div class="container right">
  
   <textarea class="form-control" id="jsonOutput" style="height: 150px; background-color: rgba(241, 241, 241, 0.624);"></textarea>
   <br>
@@ -129,13 +140,17 @@
         <button id="closeLinkedData" class="btn btn-outline-dark" style="width: 80px;">Close</button>
         </div>
 
+        <select id="standardDropdown">
+          <option value="Standard 1">Standard 1</option>
+          <option value="Standard 2">Standard 2</option>
+        </select>
+
         <br>
           <table class="table wrap-text-table table-striped table-bordered">
               <thead>
                   <tr>
                       <th>Data Path</th>
                       <th>Example Data</th>
-                      <th>Standard</th>
                       <th>Actions</th>
                   </tr>
               </thead>
@@ -145,6 +160,7 @@
           
           <button id="deleteDataItem" class="btn btn-outline-dark" onclick="resetLinkedData()" style="width: 80px;">Delete</button>
           
+        </div>
       </div>
   </div>
 
