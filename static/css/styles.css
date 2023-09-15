@@ -22,6 +22,10 @@
     border-top:rgb(5, 0, 39) solid 2px;
 }
 
+.accordion-body {
+    word-wrap: break-word;
+  }
+
 .input-output {
     width: 80%;
     height: 90px;

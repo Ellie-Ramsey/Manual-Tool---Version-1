@@ -2,8 +2,12 @@ This is a manual only version of the Ramsey Systems AI research project.
 
 
 Features To Add:
-- Story Table Fix
+- Story Table Fix DONE
+- Story history fix DONE
+
 - Timeline drop down move
+- Timeline history add
+
 - Timeline standard text file load
 - JSON Export (not formatted)
 

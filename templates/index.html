@@ -51,43 +51,38 @@
 <div id="Story" class="tabcontent">
     <br>
     <br>
-      <div class="container left">
-
-        <button id="addStoryRow" class="btn btn-primary mb-3">Add Row</button>
-
+    <div class="container left">
+      <div class="container history">
+        <h4 style="margin-top: 10px;">Chat History</h4>
+        <button id="story-history-button" class="btn" style="float:left;">Save Output</button>
         <br>
-        <div class="container history">
-          <h4 style="margin-top: 10px;">Chat History</h4>
-            <button id="story-history-button" class="btn" style="float:left;">Save Output</button>
-          <br>
-          <br>
-
-          <div class="accordion" id="accordionExample">
-            
-          </div>
-
+        <br>
+        <div class="accordion" id="accordionExample">
         </div>
-
       </div>
-
-      <div class="container right">
-
-        <textarea class="form-control" id="storyTextArea" style="height: 200px; background-color: rgba(241, 241, 241, 0.624);"></textarea>
-        <br>
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th style="width:30%;">Summary</th>
-              <th style="width:30%;">Rationale</th>
-              <th style="width:30%;">Story</th>
-              <th style="width:10%;">Action</th>
-            </tr>
-          </thead>
-          <tbody id="storyTableBody">
-            <!-- Rows will be added here -->
-          </tbody>
-        </table>
-      </div>
+    </div>
+    
+    <div class="container right">
+      <textarea class="form-control" id="storyTextArea" style="height: 200px; background-color: rgba(241, 241, 241, 0.624);"></textarea>
+      <br>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th style="width:33%;">Summary</th>
+            <th style="width:33%;">Rationale</th>
+            <th style="width:34%;">Story</th>
+          </tr>
+        </thead>
+        <tbody id="storyTableBody">
+          <tr id="row-1" data-id="1">
+            <td data-key="Summary" contentEditable="true"></td>
+            <td data-key="Rationale" contentEditable="true"></td>
+            <td data-key="Story" contentEditable="true"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
 
 
 

@@ -1,5 +1,6 @@
 //VARIABLE PREDEFINED
-  let story_data = [];
+let story_data = { Summary: '', Rationale: '', Story: '' };
+;
   let storySave = 1;
   let storyNextId = 1;
 
@@ -34,64 +35,19 @@ function openPage(pageName,elmnt,color) {
 ///////////////////////////STORY//////////////////////////
 //story text area update
 function updateJSONDisplay() {
-  // If you have an element to show the JSON, use this. Otherwise, you can remove this function.
-  const jsonOutputElem = document.getElementById("storyTextArea");
-  if (jsonOutputElem) {
-      jsonOutputElem.value = JSON.stringify(story_data, null, 2);
-  }
+  document.getElementById('storyTextArea').textContent = JSON.stringify(story_data, null, 2);
 }
 
-//story table add
-document.getElementById("addStoryRow").addEventListener("click", function () {
-  const newRow = document.createElement('tr');
-  newRow.id = `row-${storyNextId}`;
-
-  ['summary', 'rationale', 'story'].forEach(key => {
-    const cell = newRow.insertCell(-1);
-    cell.setAttribute('data-key', key);
-    cell.contentEditable = 'true';
-  });
-
-  const actionCell = newRow.insertCell(-1);
-  const deleteButton = document.createElement('button');
-  deleteButton.textContent = 'Delete';
-  deleteButton.className = 'btn btn-danger';
-  deleteButton.dataset.id = storyNextId;
-  actionCell.appendChild(deleteButton);
-
-  document.getElementById("storyTableBody").appendChild(newRow);
-
-  story_data.push({id: storyNextId, Summary: '', Rationale: '', Story: ''});
-  storyNextId++;
-  updateJSONDisplay();
-});
-
-//story table edit
+//story story_data variable update
 document.getElementById("storyTableBody").addEventListener('input', function (e) {
   if (e.target && e.target.matches("[data-key]")) {
     const key = e.target.getAttribute('data-key');
-    const id = parseInt(e.target.parentElement.id.replace("row-", ""), 10);
-    const dataObj = story_data.find(x => x.id === id);
-    if (dataObj) {
-      dataObj[key.charAt(0).toUpperCase() + key.slice(1)] = e.target.textContent;
-    }
+    // Since story_data is an object, directly update its property
+    story_data[key] = e.target.textContent;
     updateJSONDisplay();
   }
 });
-
-//story table delete
-document.getElementById("storyTableBody").addEventListener('click', function (e) {
-  if (e.target && e.target.matches(".btn-danger")) {
-    const id = parseInt(e.target.dataset.id, 10);
-    e.target.parentElement.parentElement.remove();
-
-    const index = story_data.findIndex(x => x.id === id);
-    if (index !== -1) {
-      story_data.splice(index, 1);
-    }
-    updateJSONDisplay();
-  }
-});
+ 
 
 //story history save
 $('#story-history-button').click(function() {
@@ -100,11 +56,11 @@ $('#story-history-button').click(function() {
   
   let formattedStoryData = '';
   
-  for (let i = 0; i < story_data.length; i++) {
-    for (let key in story_data[i]) {
-      formattedStoryData += `<strong>${key}:</strong> ${story_data[i][key]}<br/>`;
+  // Assuming story_data is a single object
+  for (let key in story_data) {
+    if (story_data.hasOwnProperty(key)) { // Check if the key exists in the object
+      formattedStoryData += `<strong>${key}:</strong> ${story_data[key]}<br/>`;
     }
-    formattedStoryData += '<hr>';
   }
   
   let html_data = `
@@ -124,10 +80,27 @@ $('#story-history-button').click(function() {
   
   document.getElementById("accordionExample").innerHTML += html_data;
   storySave++;
-  
- }
- 
- );
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
