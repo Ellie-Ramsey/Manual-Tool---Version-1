@@ -1,10 +1,13 @@
 This is a manual only version of the Ramsey Systems AI research project.
 
-Current Focus:
-- Timeline Pop up table
-- Fix timeline JSON
-- 
 
-Weird Bugs to Fix:
-- The load file button alway needing attention??
-- 
+Features To Add:
+- Story Table Fix
+- Timeline drop down move
+- Timeline standard text file load
+- JSON Export (not formatted)
+
+
+Future Features:
+- Fix JSON formatting
+- Add JSON import
