@@ -12,10 +12,13 @@ Features To Add:
     
 - fixed weird row not deleting bug which occured DONE
 - Timeline standard text file load DONE
-- JSON Export (not formatted)
+- JSON Export (not formatted) DONE
+- I FIXED THAT GOSH DARN BUG WITH THE ROWS NOT SAVING IT TOOK ME SO LONG DONE
+
+- Fix JSON export formatting
+
 
 
 Future Features:
-- Fix JSON formatting for saving
 - Fix the history save timeline for easier readability
 - Add JSON import
