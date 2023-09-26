@@ -14,8 +14,10 @@ Standard 3
 ------------------------------------
 Features Working On:
 - JSON Export (formatted)
-- Fix the history save timeline for easier readability
+- Remove ataItems from the JSON
 - Add JSON import
+- Fix the history save timeline for easier readability
+
 
 
 ------------------------------------

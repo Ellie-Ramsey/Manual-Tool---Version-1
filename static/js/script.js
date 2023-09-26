@@ -135,7 +135,8 @@ function generateLinkedDataFiles(original) {
     let item = original[key];
     if (item.linkedData && item.linkedData.length > 0) {
       let filename = `linkedData_${item.id}.json`;
-      files[filename] = item.linkedData;
+      let linkedDataArray = [{ standard: item.standard }, ...item.linkedData];
+      files[filename] = linkedDataArray;
     }
   }
 
