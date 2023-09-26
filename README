@@ -1,5 +1,6 @@
 This is a manual only version of the Ramsey Systems AI research project.
 
+------------------------------------
 Standards Text Layout:
 - There is an exmaple file called 'Standards_Exmaples.txt' in the root directory of the project.
 However the layout should be as follows:
@@ -10,7 +11,15 @@ Standard 3
 
 - Each standard should be on a new line without any commas or quotes
 
-Features To Add:
+------------------------------------
+Features Working On:
+- JSON Export (formatted)
+- Fix the history save timeline for easier readability
+- Add JSON import
+
+
+------------------------------------
+Features Sorted:
 - Story Table Fix DONE
 - Story history fix DONE
 
@@ -23,11 +32,3 @@ Features To Add:
 - Timeline standard text file load DONE
 - JSON Export (not formatted) DONE
 - I FIXED THAT GOSH DARN BUG WITH THE ROWS NOT SAVING IT TOOK ME SO LONG DONE
-
-- Fix JSON export formatting
-
-
-
-Future Features:
-- Fix the history save timeline for easier readability
-- Add JSON import

@@ -110,6 +110,73 @@ function populateStandardsDropdown(standards) {
 
 
 
+// 
+function transformMainTimeline(original) {
+  let result = [];
+
+  for (let key in original) {
+    let item = original[key];
+    let transformed = {
+      time: item.time,
+      event: item.event,
+      sheet: item.linkedData && item.linkedData.length > 0 ? item.id.toString() : "None"
+    };
+
+    result.push(transformed);
+  }
+
+  return result;
+}
+
+function generateLinkedDataFiles(original) {
+  let files = {};
+
+  for (let key in original) {
+    let item = original[key];
+    if (item.linkedData && item.linkedData.length > 0) {
+      let filename = `linkedData_${item.id}.json`;
+      files[filename] = item.linkedData;
+    }
+  }
+
+  return files;
+}
+
+function downloadJSON(data, filename) {
+  const jsonData = JSON.stringify(data, null, 2);
+  const blob = new Blob([jsonData], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function exportTimelineJSON() {
+  // Transform main timeline
+  const newTimeline = transformMainTimeline(timeline_data);
+
+  // Download main timeline
+  downloadJSON(newTimeline, 'timeline.json');
+
+  // Generate and download linkedData files
+  const linkedDataFiles = generateLinkedDataFiles(timeline_data);
+  for (let filename in linkedDataFiles) {
+    downloadJSON(linkedDataFiles[filename], filename);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 // Existing functions to export individual JSON data
 function exportStoryJSON() {
   const storyJSON = JSON.stringify(story_data, null, 2);
@@ -121,15 +188,9 @@ function exportStoryJSON() {
   URL.revokeObjectURL(a.href);
 }
 
-function exportTimelineJSON() {
-  const timelineJSON = JSON.stringify(timeline_data, null, 2);
-  const blob = new Blob([timelineJSON], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'timeline.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
+
+
+
 
 // New function to export both JSON files
 function exportAllJSON() {
