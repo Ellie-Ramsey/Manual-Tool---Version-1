@@ -13,11 +13,13 @@ Standard 3
 
 ------------------------------------
 Features Working On:
-- JSON Export (formatted)
-- Remove ataItems from the JSON
-- Add JSON import
-- Fix the history save timeline for easier readability
 
+
+- Add JSON import
+
+
+- format the pop up properly woman
+- Fix the history save timeline for easier readability
 
 
 ------------------------------------
@@ -34,3 +36,7 @@ Features Sorted:
 - Timeline standard text file load DONE
 - JSON Export (not formatted) DONE
 - I FIXED THAT GOSH DARN BUG WITH THE ROWS NOT SAVING IT TOOK ME SO LONG DONE
+
+- JSON Export (formatted) DONE
+
+- Remove dataItems from the JSON DONE
