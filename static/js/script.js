@@ -294,7 +294,6 @@ document.addEventListener("DOMContentLoaded", function() {
       time: "",
       event: "",
       standard: null,
-      dataItems: null,
       linkedData: []
     };
     
@@ -310,11 +309,12 @@ document.addEventListener("DOMContentLoaded", function() {
         </td>
       </tr>
     `;
-
+  
     document.getElementById("timelineTableBody").innerHTML += newRow;
     timelineNextId++;
     updateJSONDisplay();
   });
+  
 
   
 
@@ -470,3 +470,45 @@ document.getElementById("linkedDataTableBody").addEventListener("change", functi
 }, true);
 
 });
+
+
+
+
+
+
+// WE TESTING
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  
+
+  document.getElementById('importStory').addEventListener('change', handleFileImport);
+
+  function handleFileImport(event) {
+    if (event.target.files.length > 0) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            story_data = JSON.parse(e.target.result);
+            console.log("Data Imported:", story_data);
+            updateJSONDisplay();
+
+            document.querySelectorAll("[data-key='Summary']").forEach(function(cell) { cell.textContent = story_data.Summary; });
+            document.querySelectorAll("[data-key='Rationale']").forEach(function(cell) { cell.textContent = story_data.Rationale; });
+            document.querySelectorAll("[data-key='Story']").forEach(function(cell) { cell.textContent = story_data.Story; });
+
+
+        };
+
+        reader.onerror = function(err) {
+            console.error("Error reading file:", err);
+        };
+
+        reader.readAsText(file);
+    }
+}
+
+});
+
+
