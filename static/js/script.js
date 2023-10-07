@@ -31,9 +31,18 @@ function openPage(pageName,elmnt,color) {
 
 ///////////////////////////STORY//////////////////////////
 //story text area update
-function updateJSONDisplay() {
+function updateStoryDisplay() {
   document.getElementById('storyTextArea').textContent = JSON.stringify(story_data, null, 2);
 }
+
+function updateTimelineDisplay() {
+  document.getElementById('timelineTextArea').textContent = JSON.stringify(timeline_data, null, 2);
+}
+
+
+
+
+
 
 //story story_data variable update
 document.getElementById("storyTableBody").addEventListener('input', function (e) {
@@ -41,7 +50,7 @@ document.getElementById("storyTableBody").addEventListener('input', function (e)
     const key = e.target.getAttribute('data-key');
     // Since story_data is an object, directly update its property
     story_data[key] = e.target.textContent;
-    updateJSONDisplay();
+    updateStoryDisplay();
   }
 });
  
@@ -281,10 +290,10 @@ document.addEventListener("DOMContentLoaded", function() {
   
   });
 
-  function updateJSONDisplay() {
-    const jsonOutputElem = document.getElementById("jsonOutput");
-    if (jsonOutputElem) {
-      jsonOutputElem.value = JSON.stringify(timeline_data, null, 2);
+  function updateStoryDisplay() {
+    const timelineTextAreaElem = document.getElementById("timelineTextArea");
+    if (timelineTextAreaElem) {
+      timelineTextAreaElem.value = JSON.stringify(timeline_data, null, 2);
     }
   }
 
@@ -312,7 +321,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
     document.getElementById("timelineTableBody").innerHTML += newRow;
     timelineNextId++;
-    updateJSONDisplay();
+    updateStoryDisplay();
   });
   
 
@@ -320,7 +329,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   document.getElementById("standardsDropdown").addEventListener('change', function() {
     saveLinkedDataToJSON();
-    updateJSONDisplay();
+    updateStoryDisplay();
   });
   
 
@@ -331,7 +340,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const rowId = parseInt(rowElement.id.split("-")[1]);
         delete timeline_data[rowId];
         rowElement.remove();
-        updateJSONDisplay();
+        updateStoryDisplay();
       }
     }
   });
@@ -358,7 +367,7 @@ document.addEventListener("DOMContentLoaded", function() {
       if (rowElement && rowElement.id) {
         const rowId = parseInt(rowElement.id.split("-")[1]);
         timeline_data[rowId][key] = cell.textContent;
-        updateJSONDisplay();
+        updateStoryDisplay();
       }
     }
   });
@@ -369,7 +378,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (rowElement) {
       rowElement.remove();
     }
-    updateJSONDisplay();
+    updateStoryDisplay();
   }
 
   function populateLinkedDataModal(rowId) {
@@ -403,13 +412,13 @@ window.resetLinkedData = function() {
     btn.innerText = "Add";
   }
   linkedDataModal.style.display = "none";
-  updateJSONDisplay();
+  updateStoryDisplay();
 }
 
 closeLinkedData.onclick = function() {
   linkedDataModal.style.display = "none";
   saveLinkedDataToJSON();
-  updateJSONDisplay();
+  updateStoryDisplay();
 }
 
 function saveLinkedDataToJSON() {
@@ -432,7 +441,7 @@ function saveLinkedDataToJSON() {
 
 document.getElementById("linkedDataTableBody").addEventListener("blur", function(event) {
   saveLinkedDataToJSON();
-  updateJSONDisplay();
+  updateStoryDisplay();
 }, true);
 
 window.addLinkedDataRow = function() {
@@ -459,13 +468,13 @@ window.deleteLinkedDataRow = function(buttonElem, index) {
   buttonElem.parentElement.parentElement.remove();
   timeline_data[currentRowId].linkedData.splice(index, 1);  // Remove the corresponding object from linkedData
   saveLinkedDataToJSON();
-  updateJSONDisplay();
+  updateStoryDisplay();
 }
 
 document.getElementById("linkedDataTableBody").addEventListener("change", function(event) {
   if (event.target && event.target.matches(".standard-dropdown")) {
     saveLinkedDataToJSON();
-    updateJSONDisplay();
+    updateStoryDisplay();
   }
 }, true);
 
@@ -490,7 +499,7 @@ document.addEventListener("DOMContentLoaded", function() {
         reader.onload = function(e) {
             story_data = JSON.parse(e.target.result);
             console.log("Data Imported:", story_data);
-            updateJSONDisplay();
+            updateStoryDisplay();
 
             document.querySelectorAll("[data-key='Summary']").forEach(function(cell) { cell.textContent = story_data.Summary; });
             document.querySelectorAll("[data-key='Rationale']").forEach(function(cell) { cell.textContent = story_data.Rationale; });
@@ -517,29 +526,99 @@ document.addEventListener("DOMContentLoaded", function() {
 // WE CONTINUE TO TEST BABY
 
 document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById('importFiles').addEventListener('change', handleFilesUpload);
+  document.getElementById('processFilesBtn').addEventListener('click', processUploadedFiles);
 
-  // Adding event listener directly to the file input.
-  document.getElementById('importTimeline').addEventListener('change', handleFileImport);
+  let uploadedFiles = [];
 
-  function handleFileImport(event) {
-      const files = event.target.files; // Getting selected files
+  function handleFilesUpload(event) {
+    uploadedFiles = event.target.files;
+    console.log(`${uploadedFiles.length} files uploaded. Press 'Process Files' to process.`);
+  }
 
-      if (files.length > 0) {
-          const file = files[0]; 
-          const reader = new FileReader();
+  function processUploadedFiles() {
+    let linkedDataFiles = [];
 
-          reader.onload = function(e) {
-              // Parse and store the JSON data from the file.
-              timeline_data = JSON.parse(e.target.result); 
-              console.log("Timeline Data Imported:", timeline_data);
-          };
-
-          reader.onerror = function(err) {
-              console.error("Error reading file:", err);
-          };
-
-          reader.readAsText(file); // Read the file as text.
+    for (let file of uploadedFiles) {
+      if (file.name === 'timeline.json') {
+        parseTimelineFile(file, data => timeline_data = data);
+      } else if (file.name.startsWith('linkedData_')) {
+        linkedDataFiles.push(file);
       }
+    }
+
+    const timelineDataParsedCheck = setInterval(() => {
+      if (timeline_data) {
+        clearInterval(timelineDataParsedCheck);
+        processLinkedDataFiles(linkedDataFiles, timeline_data);
+      }
+    }, 100);
+  }
+
+  function parseTimelineFile(file, callback) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const rawData = JSON.parse(e.target.result);
+      let structuredData = structureTimelineData(rawData);
+      callback(structuredData);
+    };
+    reader.onerror = err => console.error("Error reading file:", err);
+    reader.readAsText(file);
+  }
+
+  function processLinkedDataFiles(files, timeline_data) {
+    const promises = files.map(file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const linkedData = JSON.parse(e.target.result);
+          integrateLinkedDataToTimeline(linkedData, timeline_data, file.name);
+          resolve();
+        } catch (err) {
+          reject(new Error(`Error in parsing/processing linkedData from file ${file.name}: ${err.message}`));
+        }
+      };
+      reader.onerror = err => reject(new Error(`Error reading file ${file.name}: ${err.message}`));
+      reader.readAsText(file);
+    }));
+
+    Promise.all(promises)
+      .then(() => {
+        console.log("All linked data files processed.");
+        console.log("Final timeline data:", timeline_data);
+        updateTimelineDisplay(); // Ensure this function is defined in your code
+      })
+      .catch(err => console.error(err));
+  }
+  
+  function structureTimelineData(rawData) {
+    const structuredData = {};
+    rawData.forEach((item, index) => {
+      structuredData[index + 1] = {
+        id: index + 1,
+        time: item.time,
+        event: item.event,
+        standard: null,
+        linkedData: []
+      };
+    });
+    return structuredData;
+  }
+
+  function integrateLinkedDataToTimeline(linkedData, timeline_data, fileName) {
+    const linkedDataId = parseInt(fileName.split('_')[1], 10);
+
+    const standard = linkedData[0]?.standard || null;
+    if (timeline_data[linkedDataId]) {
+      timeline_data[linkedDataId].standard = standard;
+      timeline_data[linkedDataId].linkedData = linkedData.slice(1);
+    } else {
+      console.error(`Timeline data for linked data ID ${linkedDataId} not found.`);
+    }
   }
 });
 
+
+
+
+// WE CONTINUE TO TEST BABY
