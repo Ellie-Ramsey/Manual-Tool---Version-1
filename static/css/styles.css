@@ -133,3 +133,9 @@ th, td {
 
     #Story {background-color: rgb(255, 255, 255);}
     #Timeline {background-color: rgb(255, 255, 255);}
+
+
+    .standard-dropdown {
+        min-width: 30px;
+        max-width: 200px;;
+    }

@@ -14,14 +14,10 @@ Standard 3
 ------------------------------------
 Features Working On:
 
-- Add JSON import
-  - Story is done
-  - Timeline still needs to be done
 
-- format the pop up properly woman
+- add the sizing stuff to pop up table
 - Fix the history save timeline for easier readability
 
-- god the story update part which is bad code I think
 
 ------------------------------------
 Features Sorted:
@@ -41,3 +37,10 @@ Features Sorted:
 - JSON Export (formatted) DONE
 
 - Remove dataItems from the JSON DONE
+
+- Add JSON import DONE OMG HORRIBLE
+  - Story is DONE
+  - Timeline DONE
+- Fixed the bad code with the 'storyUpdate' function DONE
+
+- format the pop up properly woman DONE
