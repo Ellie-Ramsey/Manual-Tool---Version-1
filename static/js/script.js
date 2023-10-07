@@ -480,7 +480,10 @@ document.getElementById("linkedDataTableBody").addEventListener("change", functi
 
 document.addEventListener("DOMContentLoaded", function() {
 
-  
+  document.getElementById('importBtn').addEventListener('click', () => {
+    // Trigger the file input to open the file selection dialog
+    document.getElementById('importFiles').click();
+});
 
   document.getElementById('importStory').addEventListener('change', handleFileImport);
 
@@ -498,7 +501,6 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll("[data-key='Rationale']").forEach(function(cell) { cell.textContent = story_data.Rationale; });
             document.querySelectorAll("[data-key='Story']").forEach(function(cell) { cell.textContent = story_data.Story; });
 
-
         };
 
         reader.onerror = function(err) {
@@ -511,4 +513,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
+
+
+
+
+
+
+// WE CONTINUE TO TEST BABY
 
