@@ -106,8 +106,10 @@
 
   <div class="container left">
   
-    <input type="file" id="importTimeline" accept=".json" multiple>
-    <!-- <button id="importTimelineBtn">Import Timeline</button> -->
+    <input type="file" id="importFiles" multiple>
+    <button id="processFilesBtn">Process Files</button>
+    <br>
+    <br>
 
     <div class="container history">
       <h4 style="margin-top: 10px;">Chat History</h4>
@@ -121,7 +123,7 @@
 
   <div class="container right">
  
-  <textarea class="form-control" id="jsonOutput" style="height: 150px; background-color: rgba(241, 241, 241, 0.624);"></textarea>
+  <textarea class="form-control" id="timelineTextArea" style="height: 150px; background-color: rgba(241, 241, 241, 0.624);"></textarea>
   <br>
       
   <button id="addBlankRowBtn" class="btn">Add Blank Row</button>

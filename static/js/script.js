@@ -40,21 +40,16 @@ function updateTimelineDisplay() {
 }
 
 
-
-
-
-
 //story story_data variable update
 document.getElementById("storyTableBody").addEventListener('input', function (e) {
   if (e.target && e.target.matches("[data-key]")) {
     const key = e.target.getAttribute('data-key');
     // Since story_data is an object, directly update its property
     story_data[key] = e.target.textContent;
-    updateStoryDisplay();
+    updateStoryDisplay(); 
   }
 });
  
-
 //story history save
 $('#story-history-button').click(function() {
   let headingVar = "storyHeading" + storySave;
@@ -88,12 +83,36 @@ $('#story-history-button').click(function() {
   storySave++;
 });
 
+//story import code
+document.addEventListener("DOMContentLoaded", function() {
 
+  document.getElementById('importStory').addEventListener('change', handleFileImport);
 
+  function handleFileImport(event) {
+    if (event.target.files.length > 0) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
 
+        reader.onload = function(e) {
+            story_data = JSON.parse(e.target.result);
+            console.log("Data Imported:", story_data);
+            updateStoryDisplay();
 
+            document.querySelectorAll("[data-key='Summary']").forEach(function(cell) { cell.textContent = story_data.Summary; });
+            document.querySelectorAll("[data-key='Rationale']").forEach(function(cell) { cell.textContent = story_data.Rationale; });
+            document.querySelectorAll("[data-key='Story']").forEach(function(cell) { cell.textContent = story_data.Story; });
 
+        };
 
+        reader.onerror = function(err) {
+            console.error("Error reading file:", err);
+        };
+
+        reader.readAsText(file);
+    }
+}
+
+});
 
 
 
@@ -101,9 +120,7 @@ $('#story-history-button').click(function() {
 
 ///////////////////////////TIMELINE//////////////////////////
 
-
-
-
+//timeline standards populate
 function populateStandardsDropdown(standards) {
   console.log("Populating Standards: ", standards); // Debugging line
   const dropdown = document.getElementById('standardsDropdown');
@@ -117,9 +134,6 @@ function populateStandardsDropdown(standards) {
 }
 
 
-
-
-// 
 function transformMainTimeline(original) {
   let result = [];
 
@@ -176,17 +190,6 @@ function exportTimelineJSON() {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
 // Existing functions to export individual JSON data
 function exportStoryJSON() {
   const storyJSON = JSON.stringify(story_data, null, 2);
@@ -199,9 +202,6 @@ function exportStoryJSON() {
 }
 
 
-
-
-
 // New function to export both JSON files
 function exportAllJSON() {
   exportStoryJSON();
@@ -210,19 +210,6 @@ function exportAllJSON() {
 
 // Attach event listener to the "Save All JSON" button
 document.getElementById('saveAllJSONButton').addEventListener('click', exportAllJSON);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //timeline history save
@@ -267,10 +254,8 @@ function formatTimelineDataForDisplay(data, indent = 0) {
 }
 
 
-
 //timeline other
 document.addEventListener("DOMContentLoaded", function() {
-
   const linkedDataModal = document.getElementById("editModal");
   const closeLinkedData = document.getElementById("closeLinkedData");
 
@@ -290,7 +275,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
   });
 
-  function updateStoryDisplay() {
+  function updateTimelineDisplay() {
     const timelineTextAreaElem = document.getElementById("timelineTextArea");
     if (timelineTextAreaElem) {
       timelineTextAreaElem.value = JSON.stringify(timeline_data, null, 2);
@@ -321,15 +306,12 @@ document.addEventListener("DOMContentLoaded", function() {
   
     document.getElementById("timelineTableBody").innerHTML += newRow;
     timelineNextId++;
-    updateStoryDisplay();
+    updateTimelineDisplay();
   });
   
-
-  
-
   document.getElementById("standardsDropdown").addEventListener('change', function() {
     saveLinkedDataToJSON();
-    updateStoryDisplay();
+    updateTimelineDisplay();
   });
   
 
@@ -340,7 +322,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const rowId = parseInt(rowElement.id.split("-")[1]);
         delete timeline_data[rowId];
         rowElement.remove();
-        updateStoryDisplay();
+        updateTimelineDisplay();
       }
     }
   });
@@ -367,7 +349,7 @@ document.addEventListener("DOMContentLoaded", function() {
       if (rowElement && rowElement.id) {
         const rowId = parseInt(rowElement.id.split("-")[1]);
         timeline_data[rowId][key] = cell.textContent;
-        updateStoryDisplay();
+        updateTimelineDisplay();
       }
     }
   });
@@ -378,7 +360,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (rowElement) {
       rowElement.remove();
     }
-    updateStoryDisplay();
+    updateTimelineDisplay();
   }
 
   function populateLinkedDataModal(rowId) {
@@ -412,13 +394,13 @@ window.resetLinkedData = function() {
     btn.innerText = "Add";
   }
   linkedDataModal.style.display = "none";
-  updateStoryDisplay();
+  updateTimelineDisplay();
 }
 
 closeLinkedData.onclick = function() {
   linkedDataModal.style.display = "none";
   saveLinkedDataToJSON();
-  updateStoryDisplay();
+  updateTimelineDisplay();
 }
 
 function saveLinkedDataToJSON() {
@@ -441,7 +423,7 @@ function saveLinkedDataToJSON() {
 
 document.getElementById("linkedDataTableBody").addEventListener("blur", function(event) {
   saveLinkedDataToJSON();
-  updateStoryDisplay();
+  updateTimelineDisplay();
 }, true);
 
 window.addLinkedDataRow = function() {
@@ -468,13 +450,13 @@ window.deleteLinkedDataRow = function(buttonElem, index) {
   buttonElem.parentElement.parentElement.remove();
   timeline_data[currentRowId].linkedData.splice(index, 1);  // Remove the corresponding object from linkedData
   saveLinkedDataToJSON();
-  updateStoryDisplay();
+  updateTimelineDisplay();
 }
 
 document.getElementById("linkedDataTableBody").addEventListener("change", function(event) {
   if (event.target && event.target.matches(".standard-dropdown")) {
     saveLinkedDataToJSON();
-    updateStoryDisplay();
+    updateTimelineDisplay();
   }
 }, true);
 
@@ -482,49 +464,7 @@ document.getElementById("linkedDataTableBody").addEventListener("change", functi
 
 
 
-
-
-
-// WE TESTING
-
-document.addEventListener("DOMContentLoaded", function() {
-
-  document.getElementById('importStory').addEventListener('change', handleFileImport);
-
-  function handleFileImport(event) {
-    if (event.target.files.length > 0) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            story_data = JSON.parse(e.target.result);
-            console.log("Data Imported:", story_data);
-            updateStoryDisplay();
-
-            document.querySelectorAll("[data-key='Summary']").forEach(function(cell) { cell.textContent = story_data.Summary; });
-            document.querySelectorAll("[data-key='Rationale']").forEach(function(cell) { cell.textContent = story_data.Rationale; });
-            document.querySelectorAll("[data-key='Story']").forEach(function(cell) { cell.textContent = story_data.Story; });
-
-        };
-
-        reader.onerror = function(err) {
-            console.error("Error reading file:", err);
-        };
-
-        reader.readAsText(file);
-    }
-}
-
-});
-
-
-
-
-
-
-
-// WE CONTINUE TO TEST BABY
-
+//timeline import code
 document.addEventListener("DOMContentLoaded", function() {
   document.getElementById('importFiles').addEventListener('change', handleFilesUpload);
   document.getElementById('processFilesBtn').addEventListener('click', processUploadedFiles);
@@ -586,6 +526,7 @@ document.addEventListener("DOMContentLoaded", function() {
       .then(() => {
         console.log("All linked data files processed.");
         console.log("Final timeline data:", timeline_data);
+        renderTimelineTable();
         updateTimelineDisplay(); // Ensure this function is defined in your code
       })
       .catch(err => console.error(err));
@@ -619,6 +560,23 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-
-
-// WE CONTINUE TO TEST BABY
+//timeline variable to table render code (used for import)
+function renderTimelineTable() {
+  let tableContent = "";
+  for (let id in timeline_data) {
+    const rowData = timeline_data[id];
+    tableContent += `
+      <tr id="row-${id}">
+        <td data-key="time" contenteditable="true">${rowData.time}</td>
+        <td data-key="event" contenteditable="true">${rowData.event}</td>
+        <td>
+          <button id="dataItemBtn-${id}" onclick="toggleDataItem(${id})">${rowData.linkedData.length > 0 ? 'Edit' : 'Add'}</button>
+        </td>
+        <td>
+          <button class="btn btn-danger delete-row">Delete</button>
+        </td>
+      </tr>
+    `;
+  }
+  document.getElementById("timelineTableBody").innerHTML = tableContent;
+}
