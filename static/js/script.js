@@ -480,11 +480,6 @@ document.getElementById("linkedDataTableBody").addEventListener("change", functi
 
 document.addEventListener("DOMContentLoaded", function() {
 
-  document.getElementById('importBtn').addEventListener('click', () => {
-    // Trigger the file input to open the file selection dialog
-    document.getElementById('importFiles').click();
-});
-
   document.getElementById('importStory').addEventListener('change', handleFileImport);
 
   function handleFileImport(event) {
@@ -520,4 +515,31 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 // WE CONTINUE TO TEST BABY
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  // Adding event listener directly to the file input.
+  document.getElementById('importTimeline').addEventListener('change', handleFileImport);
+
+  function handleFileImport(event) {
+      const files = event.target.files; // Getting selected files
+
+      if (files.length > 0) {
+          const file = files[0]; 
+          const reader = new FileReader();
+
+          reader.onload = function(e) {
+              // Parse and store the JSON data from the file.
+              timeline_data = JSON.parse(e.target.result); 
+              console.log("Timeline Data Imported:", timeline_data);
+          };
+
+          reader.onerror = function(err) {
+              console.error("Error reading file:", err);
+          };
+
+          reader.readAsText(file); // Read the file as text.
+      }
+  }
+});
 
