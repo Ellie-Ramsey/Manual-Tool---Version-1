@@ -28,7 +28,7 @@
 
 .input-output {
     width: 80%;
-    height: 90px;
+    height: 60px;
     margin: 5px;
     margin-left: auto;
     margin-right: auto;
@@ -138,4 +138,8 @@ th, td {
     .standard-dropdown {
         min-width: 30px;
         max-width: 200px;;
+    }
+
+    label {
+        font-weight: bold;
     }

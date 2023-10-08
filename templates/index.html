@@ -34,20 +34,12 @@
   <br>
   <div class="input-output" style="display: flex; justify-content: space-between; align-items: center; width: 60%;">
 
-      <!-- <div class="input-group mb-3" style="width:700px; margin-top: 15px;">
-        <input class="form-control" type="file" id="storyFileLoad">
-        <div class="input-group-append">
-            <button class="btn" id="standardsFileLoadButton" style="margin-left: 5px;">Load File</button>
-        </div>
-      </div> -->
-
-      <input type="file" id="standardsFileLoadButton" />
+    <label>
+      Upload Standards List: 
+      <input type="file" id="standardsFileLoadButton"/>
+    </label>
 
       <button class="btn" id="saveAllJSONButton">Save JSONs</button>
-
-      
-
-
   </div>
 
   <button class="tablink btn" onclick="openPage('Story', this, 'grey')" id="defaultOpen" style="margin-left: 15px;">Story Editor</button>
@@ -57,7 +49,9 @@
     <br>
     <br>
     <div class="container left">
+      <label> Upload Story Json: 
       <input type="file" id="importStory" accept=".json"/>
+      </label>
       <br>
       <br>
       <div class="container history">
@@ -105,9 +99,11 @@
   <br>
 
   <div class="container left">
-  
+    <label>
+      Upload Timeline Json:
     <input type="file" id="importFiles" multiple>
     <button id="processFilesBtn">Process Files</button>
+    </label>
     <br>
     <br>
 
