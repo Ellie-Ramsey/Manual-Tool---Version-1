@@ -386,7 +386,6 @@ window.resetLinkedData = function() {
   const obj = timeline_data[currentRowId];
   if (obj) {
     obj.linkedData = [];
-    obj.dataItems = null;
     delete obj.standard;
   }
   const btn = document.getElementById("dataItemBtn-" + currentRowId);

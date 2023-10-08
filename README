@@ -14,8 +14,6 @@ Standard 3
 ------------------------------------
 Features Working On:
 
-
-- add the sizing stuff to pop up table
 - Fix the history save timeline for easier readability
 
 
@@ -44,3 +42,6 @@ Features Sorted:
 - Fixed the bad code with the 'storyUpdate' function DONE
 
 - format the pop up properly woman DONE
+
+- the dataItems has returned - bug DONE
+- add the sizing stuff to pop up table DONE
